@@ -38,6 +38,10 @@ async function api(path, options) {
     err.tried = data && data.tried;
     throw err;
   }
+  if (data === null) {
+    // Got a normal page instead of JSON: the backend (functions/ folder) is not deployed.
+    throw new Error("The backend is not running on this site (the functions folder was not deployed).");
+  }
   return data;
 }
 
@@ -47,7 +51,7 @@ const state = { articles: [], readerToken: 0 };
 /* ---------- countries + news list ---------- */
 async function loadCountries() {
   let list;
-  try { list = await api("/api/countries"); }
+  try { list = await api("/api/countries"); if (!Array.isArray(list)) throw new Error("bad list"); }
   catch { list = [{ code: "WORLD", name: "World (all countries)" }, { code: "US", name: "United States" }, { code: "GB", name: "United Kingdom" }, { code: "MA", name: "Morocco" }]; }
   const sel = $("country");
   sel.replaceChildren(...list.map((c) => h("option", { value: c.code }, c.name)));
