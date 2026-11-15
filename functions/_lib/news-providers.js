@@ -31,8 +31,14 @@ export const newsdata = {
   envKey: "NEWSDATA_API_KEY",
   async fetch({ cc, q }, key) {
     const p = new URLSearchParams({ apikey: key, language: "en", category: "politics" });
-    if (cc !== "WORLD") p.set("country", cc.toLowerCase());
-    if (q) p.set("q", q);
+    // The "country" filter is loose (it returned unrelated regional stories), so for a
+    // specific country we search for stories that actually mention it instead.
+    if (cc !== "WORLD") {
+      const name = COUNTRY_NAME[cc];
+      p.set("q", q ? `"${name}" AND (${q})` : `"${name}"`);
+    } else if (q) {
+      p.set("q", q);
+    }
     const data = await getJson(`https://newsdata.io/api/1/latest?${p}`);
     if (data.status && data.status !== "success") throw new Error(data.results?.message || "error");
     return (data.results || []).map((r) =>
@@ -55,13 +61,19 @@ export const gnews = {
   async fetch({ cc, q }, key) {
     const p = new URLSearchParams({ apikey: key, lang: "en", max: "20" });
     let endpoint = "top-headlines";
-    if (q) {
+    if (cc !== "WORLD") {
+      // Search for stories that mention the country (the "country" filter only matches
+      // the publisher's country, which gives few results for most countries).
+      endpoint = "search";
+      const name = COUNTRY_NAME[cc];
+      p.set("q", `"${name}" AND (${q || POLITICS_WORDS})`);
+      p.set("in", "title,description");
+    } else if (q) {
       endpoint = "search";
       p.set("q", q);
     } else {
-      p.set("category", cc === "WORLD" ? "world" : "nation");
+      p.set("category", "world");
     }
-    if (cc !== "WORLD") p.set("country", cc.toLowerCase());
     const data = await getJson(`https://gnews.io/api/v4/${endpoint}?${p}`);
     return (data.articles || []).map((r) =>
       clean({
