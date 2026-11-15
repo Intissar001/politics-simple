@@ -14,7 +14,7 @@ export async function onRequestGet({ request, env }) {
   const q = (url.searchParams.get("q") || "").trim().slice(0, 100);
   if (!COUNTRY_NAME[cc]) return json({ error: "Unknown country code" }, 400);
 
-  const cacheKey = `https://cache.local/news/${cc}/${encodeURIComponent(q.toLowerCase())}`;
+  const cacheKey = `https://cache.local/news-v2/${cc}/${encodeURIComponent(q.toLowerCase())}`;
   const cached = await cacheGet(cacheKey);
   if (cached) return json({ ...cached, cached: true });
 
