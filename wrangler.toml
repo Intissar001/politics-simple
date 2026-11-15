@@ -1,0 +1,7 @@
+name = "politics-simple"
+compatibility_date = "2025-06-01"
+pages_build_output_dir = "./public"
+
+# Free Cloudflare Workers AI (no API key needed) — last-resort AI fallback.
+[ai]
+binding = "AI"

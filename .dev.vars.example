@@ -1,0 +1,20 @@
+# Copy this file to ".dev.vars" for local testing (never upload .dev.vars anywhere).
+# In production, add the SAME names in Cloudflare as encrypted secrets.
+# You do NOT need all of them: any missing key is simply skipped.
+
+# --- News APIs (tried in this order) ---
+NEWSDATA_API_KEY=
+GNEWS_API_KEY=
+NEWSAPI_API_KEY=
+CURRENTS_API_KEY=
+
+# --- AI (tried in this order; Cloudflare Workers AI needs no key) ---
+GROQ_API_KEY=
+GEMINI_API_KEY=
+OPENROUTER_API_KEY=
+
+# --- Optional: change models without editing code ---
+# GROQ_MODEL=llama-3.3-70b-versatile
+# GEMINI_MODEL=gemini-2.5-flash
+# OPENROUTER_MODEL=openrouter/free
+# WORKERS_AI_MODEL=@cf/meta/llama-3.1-8b-instruct

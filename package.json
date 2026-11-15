@@ -1,0 +1,11 @@
+{
+  "name": "politics-simple",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler pages dev public",
+    "deploy": "wrangler pages deploy public --project-name politics-simple"
+  },
+  "devDependencies": {
+    "wrangler": "^4"
+  }
+}
